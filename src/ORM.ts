@@ -28,7 +28,7 @@ class ORM<E extends RecordModel> {
         const latestRecord: Record = table[table.length - 1]
         return latestRecord.id
     }
-    private getTableName(): string {
+    public getTableName(): string {
         return `${this.db.name}-${this.model.name}`
     }
     private getTable(): Record[] {
@@ -54,7 +54,8 @@ class ORM<E extends RecordModel> {
         for (let i = 0; i < props.length; i++) {
             const prop = props[i];
             const data = recordModel[prop as keyof E]
-            if (isPrimitive(data) && prop in obj) {
+
+            if (isPrimitive(data)) {
                 obj[prop] = data;
             }
         }
@@ -94,10 +95,12 @@ class ORM<E extends RecordModel> {
 
         const json = JSON.stringify(table)
         localStorage.setItem(this.getTableName(), json)
+
+
         /**
          * return
          */
-        return 
+        return recordModel
     }
     // public update(
     //     { where, data }: {
@@ -114,13 +117,17 @@ class ORM<E extends RecordModel> {
 
         for (let i = 0; i < table.length; i++) {
             const record = table[i];
-            if(record.id === id) return  
+            if(record.id === id) return this.new(record)
         }
 
         throw new Error(`Not found record by id:${id}`)
     }
     public all() {
-
+        
+    }
+    public showTable() {
+        const table = this.getTable()
+        console.log(table)
     }
 }
 

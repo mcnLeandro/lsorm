@@ -3,13 +3,10 @@ import LsormClient, { RecordModel } from "../src/index"
 class User extends RecordModel{
 
     public name: string | null
-    public books: Function | null
-    public user: User | null
+
     constructor() {
         super()
         this.name = null
-        this.books = null
-        this.user = null
     }
     public validate(): boolean {
         return (
@@ -19,56 +16,32 @@ class User extends RecordModel{
 
 }
 
-class UserCopy {
-    public id: number
-    public name: string
-    public books: Function
-    public user: User
+const lsorm = new LsormClient({
+    db:{ name:"test" },
+    models: [
+        User
+    ]
+})
 
-    public validate(): boolean {
-        return (
-            this.name !== null
-        );
-    }
-}
-// モデルもクラスである必要はない？
-// Belongs_to??
-// 
+document.querySelector('.user-create-button')?.addEventListener('click', () => {
+    const input: HTMLInputElement | null = document.querySelector('.user-name-input')
+    const user = lsorm.models.User.create({ name: input?.value })
+    console.log(user)
+})
+document.querySelector('.user-find-button')?.addEventListener('click', () => {
+    const input: HTMLInputElement | null = document.querySelector('.user-find-input')
+    if (!input) return;
 
-
-//↓
-
-
-//プロトタイプはクラスである必要はない？
-class UserPrototype{
-    public id: number | null
-    public name: string | null
-    public books: Function | null
-    public user: User | null
-    constructor() {
-        this.name = null
-        this.books = null
-        this.user = null
-    }
-    public validate(): boolean {
-        return (
-            this.name !== null
-        );
-    }
-}
-
-
-
-
-
-// const lsorm = new LsormClient({
-//     db:{ name:"test" },
-//     models: [
-//         User
-//     ]
-// })
-
-
+    const user = lsorm.models.User.findById(parseInt(input?.value))
+    console.log(user)
+})
+document.querySelector('.drop-button')?.addEventListener('click', () => {
+    lsorm.drop()
+})
+document.querySelector('.show-table-button')?.addEventListener('click', () => {
+    lsorm.models.User.showTable()
+    
+})
 
 
 // console.log(lsorm.models.User.update({

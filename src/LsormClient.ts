@@ -48,8 +48,9 @@ class LsormClient {
         });
     }
     public drop() {
+
         Object.values(this.models).forEach(model => {
-            const tableName = this.getTableName(model.constructor.name)
+            const tableName = model.getTableName()
             localStorage.removeItem(tableName)
         });
     }
